@@ -1,30 +1,126 @@
 # Recursifier
 
-TODO: Delete this and the text below, and describe your gem
-
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/recursifier`. To experiment with that code, run `bin/console` for an interactive prompt.
+The Recursifier gem provides functionalities for recursively querying hierarchical data from a database and visualizing it in an interactive organizational chart format.
 
 ## Installation
 
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+To use the Recursifier gem in your Ruby project, add it to your Gemfile:
+```ruby
 
-Install the gem and add to the application's Gemfile by executing:
+gem 'recursifier', '~> 1.0.0'
+```
 
-    $ bundle add UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+Then, run bundle install to install the gem.
 
-    $ gem install UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
 
 ## Usage
 
-TODO: Write usage instructions here
+Fetch Hierarchy
+To fetch hierarchical data from the database, use the fetch_hierarchy method:
+```ruby
+result = Recursifier::RecursiveQuery.fetch_hierarchy(
+  table_name,
+  parent_matching_column,
+  sub_matching_column,
+  start_id,
+  filters = {},
+  selected_columns = [],
+  max_depth = 10,
+  current_depth = 0
+)
+```
 
-## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+Parameters:
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+**table_name:** Name of the database table containing the hierarchical data.
+
+**parent_column:** Name of the column representing the parent-child relationship.
+
+**sub_matching_column:** Name of the column representing the child-parent relationship.
+
+**start_id:** ID of the starting node in the hierarchy **#parent_column id.**
+
+**filters:** Optional. Additional filters to apply to the query.
+
+**selected_columns:** Optional. Array of columns to select from the database table.
+
+**max_depth:** Optional. Maximum depth to traverse in the hierarchy.
+
+**current_depth:** Optional. Current depth in the hierarchy traversal.
+<br>
+
+_**Returns:**_
+
+An instance of **Recursifier::RecursiveQuery::HierarchicalData** containing the fetched hierarchical data.
+
+<br>
+<hr>
+
+
+**Visualize Hierarchy** <br>
+To visualize hierarchical data as an organizational chart, use the to_visualize method:
+
+```ruby
+visualization_html = result.to_visualize
+```
+
+
+_**Returns:**_
+
+HTML code for embedding the hierarchical visualization.
+
+<br>
+
+<hr>
+
+
+**Get Raw Data** <br>
+To retrieve the raw hierarchical data fetched from the database, use the get_data method:
+```ruby
+
+raw_data = result.get_data
+```
+
+
+_**Returns:**_
+
+Raw hierarchical data as a PostgreSQL PG::Result object.
+<br>
+
+<hr>
+
+
+
+## Additional Functionalities <br>
+The Recursifier gem also provides additional functionalities such as:
+
+Customizable visualizations with interactive features.
+Support for dynamic filtering and searching of hierarchical data.
+Performance optimization for handling large datasets efficiently.
+
+**Example:**
+
+```ruby
+result = Recursifier::RecursiveQuery.fetch_hierarchy(
+  'employees',
+  'manager_id',
+  'employee_id',
+  1,
+  { employee_enabed: true, employee_status: active, assocaited_table_id: 12} #hash to denote the fileters
+  ['column1', 'column2'] # columns to be listed
+)
+
+visualization_html = result.to_visualize
+
+```
+
+
+This example fetches hierarchical data of employees from the 'employees' table, visualizes it as an organizational chart, and returns the HTML code for embedding the visualization.
+
+## Conclusion
+The Recursifier gem simplifies the retrieval and visualization of hierarchical data, making it easier for developers to understand and analyze complex relationships within their datasets.
 
 ## Contributing
 
